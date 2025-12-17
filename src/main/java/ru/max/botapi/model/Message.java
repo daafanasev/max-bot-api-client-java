@@ -48,7 +48,7 @@ public class Message implements MaxSerializable {
     private @Valid String url;
 
     @JsonCreator
-    public Message(@JsonProperty("recipient") Recipient recipient, @JsonProperty("timestamp") Long timestamp, @JsonProperty("message") MessageBody body) {
+    public Message(@JsonProperty("recipient") Recipient recipient, @JsonProperty("timestamp") Long timestamp, @JsonProperty("body") MessageBody body) {
         this.recipient = recipient;
         this.timestamp = timestamp;
         this.body = body;
@@ -113,7 +113,7 @@ public class Message implements MaxSerializable {
     * Body of created message. Text + attachments. Could be null if message contains only forwarded message
     * @return body
     **/
-    @JsonProperty("message")
+    @JsonProperty("body")
     public MessageBody getBody() {
         return body;
     }
