@@ -35,6 +35,11 @@ public enum ChatAdminPermission implements MaxEnum {
     ADD_ADMINS("add_admins"),
     CHANGE_CHAT_INFO("change_chat_info"),
     PIN_MESSAGE("pin_message"),
+    CAN_CALL("can_call"),
+    DELETE("delete"),
+    VIEW_STATS("view_stats"),
+    EDIT("edit"),
+    EDIT_LINK("edit_link"),
     WRITE("write");
 
     private String value;
