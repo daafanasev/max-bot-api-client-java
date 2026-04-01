@@ -20,29 +20,28 @@
 
 package ru.max.botapi.client;
 
+import org.jetbrains.annotations.Nullable;
+import ru.max.botapi.exceptions.TransportClientException;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.InputStream;
 import java.util.concurrent.Future;
 
-import org.jetbrains.annotations.Nullable;
-
-import ru.max.botapi.exceptions.TransportClientException;
-
 public interface MaxTransportClient extends Closeable {
-    Future<ClientResponse> get(String url) throws TransportClientException;
+    Future<ClientResponse> get(String url, String token) throws TransportClientException;
 
-    Future<ClientResponse> post(String url, @Nullable byte[] body) throws TransportClientException;
+    Future<ClientResponse> post(String url, String token,  @Nullable byte[] body) throws TransportClientException;
 
-    Future<ClientResponse> post(String url, File file) throws TransportClientException, InterruptedException;
+    Future<ClientResponse> post(String url, String token, File file) throws TransportClientException, InterruptedException;
 
-    Future<ClientResponse> post(String url, String filename, InputStream inputStream) throws TransportClientException;
+    Future<ClientResponse> post(String url, String token, String filename, InputStream inputStream) throws TransportClientException;
 
-    Future<ClientResponse> put(String url, @Nullable byte[] requestBody) throws TransportClientException;
+    Future<ClientResponse> put(String url, String token, @Nullable byte[] requestBody) throws TransportClientException;
 
-    Future<ClientResponse> delete(String url) throws TransportClientException;
+    Future<ClientResponse> delete(String url, String token) throws TransportClientException;
 
-    Future<ClientResponse> patch(String url, @Nullable byte[] requestBody) throws TransportClientException;
+    Future<ClientResponse> patch(String url, String token, @Nullable byte[] requestBody) throws TransportClientException;
 
     enum Method {
         GET, POST, PUT, HEAD, DELETE, PATCH, OPTIONS

@@ -84,18 +84,25 @@ public class OkHttpTransportClient implements MaxTransportClient {
     }
 
     @Override
-    public Future<ClientResponse> get(String url) {
-        Request request = new Request.Builder().url(url).build();
+    public Future<ClientResponse> get(String url, String token) {
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Authorization", token)
+                .build();
         return newCall(request);
     }
 
     @Override
-    public Future<ClientResponse> post(String url, @Nullable byte[] body) {
-        return newCall(new Request.Builder().url(url).post(wrapBody(body)).build());
+    public Future<ClientResponse> post(String url, String token, @Nullable byte[] body) {
+        return newCall(new Request.Builder()
+                .url(url)
+                .header("Authorization", token)
+                .post(wrapBody(body))
+                .build());
     }
 
     @Override
-    public Future<ClientResponse> post(String url, File file) throws TransportClientException, InterruptedException {
+    public Future<ClientResponse> post(String url, String token, File file) throws TransportClientException, InterruptedException {
         Objects.requireNonNull(url, "Filename must not be null");
         Objects.requireNonNull(file, "inputStream must not be null");
         LOG.info("Started uploading to url {}", url);
@@ -122,6 +129,7 @@ public class OkHttpTransportClient implements MaxTransportClient {
                         .header("Content-Range", range)
                         .header("X-Requested-With", "XMLHttpRequest")
                         .header("Content-Disposition", "attachment; filename=" + filename)
+                        .header("Authorization", token)
                         .url(url)
                         .post(body)
                         .build();
@@ -144,7 +152,7 @@ public class OkHttpTransportClient implements MaxTransportClient {
     }
 
     @Override
-    public Future<ClientResponse> post(String url, String filename, InputStream inputStream) throws
+    public Future<ClientResponse> post(String url, String token, String filename, InputStream inputStream) throws
             TransportClientException {
         Objects.requireNonNull(filename, "Filename must not be null");
         Objects.requireNonNull(inputStream, "inputStream must not be null");
@@ -162,7 +170,11 @@ public class OkHttpTransportClient implements MaxTransportClient {
                     .addFormDataPart("v1", filename, RequestBody.create(BINARY_CONTENT_TYPE, data))
                     .build();
 
-            Request request = new Request.Builder().url(url).post(body).build();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .header("Authorization", token)
+                    .post(body)
+                    .build();
             return newCall(request);
         } catch (IOException e) {
             throw new TransportClientException("Failed to execute POST request", e);
@@ -176,18 +188,30 @@ public class OkHttpTransportClient implements MaxTransportClient {
     }
 
     @Override
-    public Future<ClientResponse> put(String url, @Nullable byte[] requestBody) {
-        return newCall(new Request.Builder().url(url).put(wrapBody(requestBody)).build());
+    public Future<ClientResponse> put(String url, String token, @Nullable byte[] requestBody) {
+        return newCall(new Request.Builder()
+                .url(url)
+                .header("Authorization", token)
+                .put(wrapBody(requestBody))
+                .build());
     }
 
     @Override
-    public Future<ClientResponse> delete(String url) {
-        return newCall(new Request.Builder().url(url).delete().build());
+    public Future<ClientResponse> delete(String url, String token) {
+        return newCall(new Request.Builder()
+                .url(url)
+                .header("Authorization", token)
+                .delete()
+                .build());
     }
 
     @Override
-    public Future<ClientResponse> patch(String url, @Nullable byte[] requestBody) {
-        return newCall(new Request.Builder().url(url).patch(wrapBody(requestBody)).build());
+    public Future<ClientResponse> patch(String url, String token, @Nullable byte[] requestBody) {
+        return newCall(new Request.Builder()
+                .url(url)
+                .header("Authorization", token)
+                .patch(wrapBody(requestBody))
+                .build());
     }
 
     @Override

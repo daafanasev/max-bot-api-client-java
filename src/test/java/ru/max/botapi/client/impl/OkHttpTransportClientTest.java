@@ -1,27 +1,22 @@
 package ru.max.botapi.client.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
 import org.apache.log4j.Level;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ru.max.botapi.UnitTest;
 import ru.max.botapi.client.ClientResponse;
 import ru.max.botapi.exceptions.TransportClientException;
 import ru.max.botapi.server.MaxServer;
 import ru.max.botapi.server.MaxService;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static spark.Spark.get;
 
 
@@ -35,7 +30,7 @@ public class OkHttpTransportClientTest {
         when(inputStream.read(any(), anyInt(), anyInt())).thenThrow(fakeException);
         doThrow(fakeException).when(inputStream).close();
 
-        client.post("http://invalidurl", "test.txt", inputStream);
+        client.post("http://invalidurl", "token", "test.txt", inputStream);
     }
 
     @Test(expected = TransportClientException.class)
@@ -48,7 +43,8 @@ public class OkHttpTransportClientTest {
         });
 
         OkHttpTransportClient client = new OkHttpTransportClient();
-        Future<ClientResponse> futureResponse = client.get(MaxServer.ENDPOINT + path + "?access_token=" + MaxService.ACCESS_TOKEN);
+        Future<ClientResponse> futureResponse = client.get(
+                MaxServer.ENDPOINT + path, MaxService.ACCESS_TOKEN);
         org.apache.log4j.Logger logger4j = org.apache.log4j.Logger.getRootLogger();
         Level currentLevel = logger4j.getLevel();
         logger4j.setLevel(Level.DEBUG);

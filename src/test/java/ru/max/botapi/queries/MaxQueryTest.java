@@ -186,7 +186,7 @@ public class MaxQueryTest extends UnitTestBase {
     public void shouldWrapTransportException() throws Exception {
         MaxTransportClient transport = mock(MaxTransportClient.class);
         MaxSerializer serializer = mock(MaxSerializer.class);
-        when(transport.post(anyString(), any(byte[].class))).thenThrow(new TransportClientException("test exception"));
+        when(transport.post(anyString(), anyString(), any(byte[].class))).thenThrow(new TransportClientException("test exception"));
         MaxClient clientMock = new MaxClient(MaxService.ACCESS_TOKEN, transport, serializer);
         new MaxQuery<>(clientMock, "/me", User.class, MaxTransportClient.Method.POST).execute();
     }
@@ -217,7 +217,7 @@ public class MaxQueryTest extends UnitTestBase {
     public void shouldWrapInterruptedException() throws Exception {
         MaxTransportClient transport = mock(MaxTransportClient.class);
         MaxSerializer serializer = mock(MaxSerializer.class);
-        when(transport.post(anyString(), any(byte[].class))).thenReturn(INTERRUPTING_FUTURE);
+        when(transport.post(anyString(), anyString(), any(byte[].class))).thenReturn(INTERRUPTING_FUTURE);
 
         MaxClient clientMock = new MaxClient(MaxService.ACCESS_TOKEN, transport, serializer);
         new MaxQuery<>(clientMock, "/me", User.class, MaxTransportClient.Method.POST).execute();

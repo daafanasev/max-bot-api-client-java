@@ -83,7 +83,7 @@ public class MaxClient implements Closeable {
     public <T> Future<T> newCall(MaxUploadQuery<T> query) throws ClientException {
         try {
             String url = buildURL(query);
-            Future<ClientResponse> call = query.getUploadExec().newCall(getTransport());
+            Future<ClientResponse> call = query.getUploadExec().newCall(getTransport(), getAccessToken());
             return new FutureResult<>(call, rawResponse -> handleResponse(rawResponse, query, url));
         } catch (InterruptedException e) {
             throw new ClientException(e);
@@ -99,19 +99,19 @@ public class MaxClient implements Closeable {
         try {
             switch (method) {
                 case GET:
-                    call = getTransport().get(url);
+                    call = getTransport().get(url, getAccessToken());
                     break;
                 case POST:
-                    call = getTransport().post(url, requestBody);
+                    call = getTransport().post(url, getAccessToken(), requestBody);
                     break;
                 case PUT:
-                    call = getTransport().put(url, requestBody);
+                    call = getTransport().put(url, getAccessToken(), requestBody);
                     break;
                 case DELETE:
-                    call = getTransport().delete(url);
+                    call = getTransport().delete(url, getAccessToken());
                     break;
                 case PATCH:
-                    call = getTransport().patch(url, requestBody);
+                    call = getTransport().patch(url, getAccessToken(), requestBody);
                     break;
                 default:
                     throw new ClientException(400, "Method " + method.name() + " is not supported.");
@@ -141,8 +141,6 @@ public class MaxClient implements Closeable {
             sb.append('&');
         }
 
-        sb.append("access_token=").append(getAccessToken());
-        sb.append('&');
         sb.append("v=").append(Version.get());
 
         List<QueryParam<?>> params = query.getParams();
