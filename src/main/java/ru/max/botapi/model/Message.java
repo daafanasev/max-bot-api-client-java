@@ -20,6 +20,7 @@
 
 package ru.max.botapi.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.Nullable;
@@ -42,13 +43,18 @@ public class Message implements MaxSerializable {
     private @Valid LinkedMessage link;
     @NotNull
     private final @Valid MessageBody body;
+
+
     @Nullable
     private @Valid MessageStat stat;
     @Nullable
     private @Valid String url;
 
     @JsonCreator
-    public Message(@JsonProperty("recipient") Recipient recipient, @JsonProperty("timestamp") Long timestamp, @JsonProperty("body") MessageBody body) {
+    public Message(
+            @JsonProperty("recipient") Recipient recipient,
+            @JsonProperty("timestamp") Long timestamp,
+            @JsonProperty("body") @JsonAlias({"body", "message"}) MessageBody body) {
         this.recipient = recipient;
         this.timestamp = timestamp;
         this.body = body;
